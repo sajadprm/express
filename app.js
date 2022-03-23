@@ -7,7 +7,6 @@ const weather = require("./weather");
 const async = require("hbs/lib/async");
 const port = 3000;
 
-
 const directoryPublicPath = path.join(__dirname, "/public");
 const directoryViewsPath = path.join(__dirname, "/templates");
 const directoryPartialsPath = path.join(directoryViewsPath, "/partials");
