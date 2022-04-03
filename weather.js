@@ -18,10 +18,10 @@ const callApi = async(city="Tehran")=>
     return response.data;
 
 }
-const showResult=(weather)=>{
-    console.log(chalk.blue(weather.location.name));
-    console.log(chalk.red(weather.current.temperature));
-}
+// const showResult=(weather)=>{
+//     console.log(chalk.blue(weather.location.name));
+//     console.log(chalk.red(weather.current.temperature));
+// }
 const objExport={
     getWeather
 }

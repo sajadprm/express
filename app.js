@@ -4,7 +4,7 @@ const app = express();
 const hbs = require("hbs");
 const morgan = require("morgan");
 const weather = require("./weather");
-const async = require("hbs/lib/async");
+// const async = require("hbs/lib/async");
 const port = 3000;
 
 const directoryPublicPath = path.join(__dirname, "/public");
