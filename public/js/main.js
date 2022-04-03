@@ -14,7 +14,7 @@ form.addEventListener("submit",function(event){
     document.getElementById("icon").src="";
 
 
-    fetch(`http://127.0.0.1:3000/weather/${location}`).then((response)=>{
+    fetch(`${window.location.href}/${location}`).then((response)=>{
              if(response.ok)
              {
                     response.json().then((result)=>{
