@@ -5,7 +5,7 @@ const hbs = require("hbs");
 const morgan = require("morgan");
 const weather = require("./weather");
 // const async = require("hbs/lib/async");
-const port = process.env.port || 3000;
+const port = process.env.PORT || 3000;
 
 const directoryPublicPath = path.join(__dirname, "/public");
 const directoryViewsPath = path.join(__dirname, "/templates");
