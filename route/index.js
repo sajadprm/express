@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const authRouter=require("../route/auth");
 router.get("/", (req, res) => {
     res.render("base", {
         title: "Home",
@@ -27,7 +28,7 @@ router.get("/contact", (req, res) => {
 
 
 })
-
+router.use('/auth',authRouter)
 router.get('*', (req, res) => {
     res.statusCode = 404;
     res.render("404", {
@@ -37,6 +38,8 @@ router.get('*', (req, res) => {
     })
 
 });
+
+
 router.all('*', (req, res) => {
     res.sendStatus(404);
 

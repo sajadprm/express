@@ -68,6 +68,7 @@ router.post("/", (req, res) => {
         age: req.body.age,
         userName: req.body.userName,
         email: req.body.email,
+        password:req.body.password,
         isActive: req.body.isActive === undefined ? true : req.body.isActive
 
     });

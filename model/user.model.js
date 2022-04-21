@@ -26,7 +26,9 @@ const User = mongoose.model("Users", {
             }
         },
         trim: true,
-        minLength: 4,
+        minLength: 5,
+        unique:true,
+        lowercase:true
 
     },
     email: {
@@ -41,6 +43,12 @@ const User = mongoose.model("Users", {
                 }
             }
         }
+
+    },
+    password:{
+        type:String,
+        minLength: 5,
+        required:true
 
     }
 
