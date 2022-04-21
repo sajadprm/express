@@ -3,6 +3,8 @@ const path = require("path");
 const app = express();
 const hbs = require("hbs");
 const morgan = require("morgan");
+const cookieParser=require("cookie-parser");
+const isLogin=require("./tools/auth");
 // Router 
 const weatherRouter = require("./route/weather");
 const userRouter = require("./route/user");
@@ -22,11 +24,13 @@ hbs.registerPartials(directoryPartialsPath);
 
 app.use(morgan('dev'));
 app.use(express.json());
+app.use(cookieParser());
+
 
 
 app.use('/weather', weatherRouter);
-app.use('/users', userRouter);
-app.use('/tasks', taskRouter);
+app.use('/users',isLogin,userRouter);
+app.use('/tasks',isLogin,taskRouter);
 app.use('/', indexRouter);
 
 

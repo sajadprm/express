@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const weather = require("../weather");
+const weather = require("../tools/weather");
 //middleware
 
 const accessWather = (req, res, next) => {
