@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Task = require("../model/task.model");
-
 router.get('/', (req, res) => {
     const query = {};
     if (req.query.complete === "true") {
