@@ -60,26 +60,6 @@ router.delete("/:id", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
 
-    const person = new User({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        age: req.body.age,
-        userName: req.body.userName,
-        email: req.body.email,
-        password:req.body.password,
-        isActive: req.body.isActive === undefined ? true : req.body.isActive
-
-    });
-    person.save().then(savePerson => {
-        res.send(savePerson);
-    }).catch(err => {
-        res.statusCode = 500;
-        res.send(err.message)
-    })
-
-
-});
 
 module.exports = router;

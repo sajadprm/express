@@ -35,4 +35,28 @@ User.findOne({userName:req.body.userName,password:req.body.password}).exec((err,
 })
 })
 
+router.post("/register",(req,res)=>{
+  if(!req.body || !req.body.firstName || !req.body.lastName || !req.body.email
+    || !req.body.userName || !req.body.password )
+    {
+        return res.sendStatus(400);
+    }
+
+    const person = new User({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        age: req.body.age===undefined ? null :req.body.age,
+        userName: req.body.userName,
+        email: req.body.email,
+        password:req.body.password,
+
+    });
+    person.save().then(savePerson => {
+        res.json(savePerson);
+    }).catch(err => {
+        res.statusCode = 500;
+        res.send(err.message)
+    })
+
+})
 module.exports=router;
