@@ -10,6 +10,7 @@ const accessWather = (req, res, next) => {
 }
 
 router.get("/", async (req, res) => {
+   try{
     const data = await weather.getWeather();
     res.render("weather", {
         title: "Get Weather",
@@ -17,11 +18,20 @@ router.get("/", async (req, res) => {
         content: ` The ${data.location.name} temperature is  ${data.current.temperature}`
     });
 
+   }catch(err){
+       console.log(err);
+       return res.sendStatus(500);
+   }
 });
 
 router.get("/:city", accessWather, async (req, res) => {
+   try{
     const data = await weather.getWeather(req.params.city);
-    res.send(data);
+     res.send(data);
+   }catch(err){
+       console.log(err);
+       return res.sendStatus(500);
+   }
 
 
 });

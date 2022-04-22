@@ -1,28 +1,34 @@
-const Session=require("../model/session.model");
-const isLogin=(req,res,next)=>{
+const {
+    sendStatus
+} = require("express/lib/response");
+const async = require("hbs/lib/async");
+const Session = require("../model/session.model");
+const User = require("../model/user.model");
+const isLogin = async (req, res, next) => {
+    try {
+        if (!req.cookies.session) {
+            return res.sendStatus(401);
+        }
 
-if(!req.cookies.session)
-{
-    return res.sendStatus(401);
-}
 
-Session.findOne({session:req.cookies.session}).exec((err,session)=>{
-    if(err)
-    {
+
+        const session = await Session.findOne({
+            session: req.cookies.session
+        }).populate("user", "_id role isActive");
+        if (!session) {
+            return res.sendStatus(401);
+        }
+        req.user = session.user;
+        return next();
+
+
+    } catch (err) {
         console.log(err);
         return res.sendStatus(500);
     }
-    if(!session)
-    {
-        return res.sendStatus(401);
-    }
-
-    console.log(session);
-    return next();
-})
 
 
 }
 
 
-module.exports=isLogin;
+module.exports = isLogin;

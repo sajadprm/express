@@ -1,41 +1,46 @@
 const express = require('express');
+const async = require('hbs/lib/async');
 const router = express.Router();
 const User = require("../model/user.model");
+const ac = require("../tools/ac");
 
-router.get('/', (req, res) => {
-    User.find().exec((err, result) => {
-        if (err) {
-            res.sendStatus(500);
-            console.log(err);
+router.get('/', ac.checkAdminMidellware, async (req, res) => {
 
-        } else {
-            res.json(result);
-        }
-    })
 
+    try {
+        const users = await User.find();
+        res.json(users);
+
+    } catch (err) {
+        console.log(err);
+        res.sendStatus(500);
+
+    }
 });
 
-router.get("/:id", (req, res) => {
-    User.findById(req.params.id).exec((err, user) => {
-        if (err) {
-            console.log(err);
-            return res.sendStatus(500);
-        };
-        if (!user) {
-            return res.sendStatus(404);
+router.get("/:id", async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
 
+
+        if (!user) {
+
+            return res.sendStatus(404);
         }
         res.json(user);
-    })
+
+    } catch (err) {
+
+        console.log(err);
+        res.sendStatus(500);
+    }
+
 })
 
-router.put("/:id", (req, res) => {
-    User.findById(req.params.id).exec((err, user) => {
-        if (err) {
-            console.log(err);
-            return res.sendStatus(500);
-        }
+router.put("/:id", async (req, res) => {
 
+    try {
+        const user = await User.findById(req.params.id)
         if (!user) {
             return res.sendStatus(404);
         }
@@ -44,20 +49,32 @@ router.put("/:id", (req, res) => {
         (req.body.age !== undefined) && (user.age = req.body.age);
         (req.body.isActive !== undefined) && (user.isActive = req.body.isActive);
 
-        user.save().then(savedUser => {
-            res.json(savedUser);
-        });
-    })
+        await user.save()
+        res.json(user);
+
+
+    } catch (err) {
+        console.log(err.message);
+        return res.sendStatus(500);
+    }
+
+
 });
 
-router.delete("/:id", (req, res) => {
-    User.findByIdAndDelete(req.params.id).then((deletedUser) => {
+router.delete("/:id", async (req, res) => {
+    try {
+        const deletedUser = await User.findByIdAndDelete(req.params.id)
         if (!deletedUser) {
             return res.sendStatus(404);
         }
-        res.sendStatus(200);
+        return res.sendStatus(200);
 
-    });
+
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+
 });
 
 

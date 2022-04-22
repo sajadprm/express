@@ -2,20 +2,29 @@ const validator = require('validator');
 const mongoose = require('mongoose');
 const User = mongoose.model("Users", {
     firstName: {
-        type: String
+        type: String,
+        required:true,
     },
     lastName: {
-        type: String
+        type: String,
+        required:true,
     },
     age: {
         type: Number,
-        min: [3, 'very low age'],
-        max: [80, 'very high age']
+       
+    },
+
+    role:{
+        type:String,
+        enum:['admin','client'],
+        default:'client',
+        required:true,
     },
 
     isActive: {
         type: Boolean,
         default: true,
+        required:true
     },
     userName: {
         type: String,
@@ -33,6 +42,7 @@ const User = mongoose.model("Users", {
     },
     email: {
         type: String,
+        required:true,
 
         validate: {
             validator: (email) => {
