@@ -46,14 +46,19 @@ router.get("/:id", async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try {
-        const update = {};
-        (req.body.description !== undefined) && (update.description = req.body.description);
-        (req.body.isCompleted !== undefined) && (update.isCompleted = req.body.isCompleted);
+        const updateReqKeys=Object.keys(req.body);
+        const allowedUpdate=['title','description','isCompleted'];
+        const isAllowedUpdate=updateReqKeys.every((key)=>allowedUpdate.includes(key));
+       
+        if(!isAllowedUpdate)
+        {
+            return res.sendStatus(400);
+        }
 
         const task = await Task.findOneAndUpdate({
             _id: req.params.id,
             user: req.user._id
-        }, update, {
+        }, req.body, {
             new: true
         });
 
