@@ -4,7 +4,7 @@ const Session=require("../model/session.model");
 const uuid=require("uuid");
 const async = require('hbs/lib/async');
 const router = express.Router();
-
+const bcrypt=require("bcryptjs");
 router.post('/login',async (req,res)=>{
     try
     {
@@ -12,7 +12,7 @@ router.post('/login',async (req,res)=>{
     {
         return res.sendStatus(400);
     }
-  
+       
         const user= await User.findOne({userName:req.body.userName,password:req.body.password})
    
     if(!user)
@@ -37,21 +37,17 @@ router.post('/login',async (req,res)=>{
 
 router.post("/register", async (req,res)=>{
     try{
-  if(!req.body || !req.body.firstName || !req.body.lastName || !req.body.email
-    || !req.body.userName || !req.body.password )
-    {
-        return res.sendStatus(400);
-    }
   
-        const person = await new User({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            age: req.body.age===undefined ? null :req.body.age,
-            userName: req.body.userName,
-            email: req.body.email,
-            password:req.body.password,
-    
-        });
+    const postKeysReq=Object.keys(req.body);
+    const allowedPost=["firstName","lastName","age","password",'userName','email'];
+    const isAllowedPost=postKeysReq.every((key)=> allowedPost.includes(key));
+      if(!isAllowedPost)
+      {
+          return res.sendStatus(400);
+      }
+  
+        const person = await new User(req.body);
+        
         await person.save();
             res.json(person);
             
