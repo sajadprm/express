@@ -12,8 +12,7 @@ router.post('/login',async (req,res)=>{
     {
         return res.sendStatus(400);
     }
-       
-        const user= await User.findOne({userName:req.body.userName,password:req.body.password})
+        const user= await User.findForLogin(req.body.userName,req.body.password);
    
     if(!user)
     {
@@ -44,7 +43,7 @@ router.post("/register", async (req,res)=>{
     }
 
     const postKeysReq=Object.keys(req.body);
-    const allowedPost=["firstName","lastName","age","password",'userName','email'];
+    const allowedPost=["firstName","lastName","age","password",'userName','email',"role","isActive"];
     const isAllowedPost=postKeysReq.every((key)=> allowedPost.includes(key));
       if(!isAllowedPost)
       {

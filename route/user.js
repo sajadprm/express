@@ -49,7 +49,7 @@ router.put("/:id", async (req, res) => {
           {
               return res.sendStatus(400);
           }
-        const user= await User.findByIdAndUpdate(req.params.id,req.body,{new:true})
+        const user= await User.findOneAndUpdate(req.params.id,req.body,{new:true})
         if (!user) {
             return res.sendStatus(404);
         }
