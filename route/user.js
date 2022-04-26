@@ -55,7 +55,8 @@ router.put("/:id", async (req, res) => {
         }
        
 
-            res.json(user);
+            // res.json(User.showUser(user));
+            res.json(user.showUser());
         
    
     }catch(err){

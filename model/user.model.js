@@ -101,6 +101,14 @@ UserSchema.statics.findForLogin= async function(userName,password){
 }
 
 
+UserSchema.methods.toJSON=function(){
+    const objectData=this.toObject();
+    delete objectData.__v;
+    delete objectData.password;
+    delete objectData.isActive;
+    return objectData;
+}
+
 const User = mongoose.model("Users",UserSchema);
 
 module.exports = User;

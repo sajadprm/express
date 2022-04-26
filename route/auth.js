@@ -6,6 +6,7 @@ const async = require('hbs/lib/async');
 const router = express.Router();
 const bcrypt=require("bcryptjs");
 router.post('/login',async (req,res)=>{
+   
     try
     {
     if(!req.body || !req.body.userName || !req.body.password)
@@ -13,6 +14,7 @@ router.post('/login',async (req,res)=>{
         return res.sendStatus(400);
     }
         const user= await User.findForLogin(req.body.userName,req.body.password);
+      
    
     if(!user)
     {
@@ -25,6 +27,7 @@ router.post('/login',async (req,res)=>{
         user:user._id
     });
     await newSession.save();
+    // res.json(user);
     res.json(user);
 
     }catch(err){
