@@ -37,7 +37,12 @@ router.post('/login',async (req,res)=>{
 
 router.post("/register", async (req,res)=>{
     try{
-  
+  if(!req.body || !req.body.firstName || !req.body.lastName || !req.body.email
+    || !req.body.userName || !req.body.password )
+    {
+        return res.sendStatus(400);
+    }
+
     const postKeysReq=Object.keys(req.body);
     const allowedPost=["firstName","lastName","age","password",'userName','email'];
     const isAllowedPost=postKeysReq.every((key)=> allowedPost.includes(key));
@@ -47,7 +52,6 @@ router.post("/register", async (req,res)=>{
       }
   
         const person = await new User(req.body);
-        
         await person.save();
             res.json(person);
             
