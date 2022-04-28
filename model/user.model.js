@@ -2,6 +2,8 @@ const validator = require('validator');
 const mongoose = require('mongoose');
 const bcrypt=require("bcryptjs");
 const async = require('hbs/lib/async');
+const Task=require("./task.model");
+const Session=require("./session.model");
 
 const UserSchema=mongoose.Schema({
     firstName: {
@@ -88,14 +90,27 @@ UserSchema.pre("findOneAndUpdate",async function(next){
     next();
 })
 
+UserSchema.post("findOneAndDelete",async function(deletedUser){
+  const deleteTask = await Task.deleteMany({user:deletedUser._id});
+  const deletedSession= await Session.deleteMany({user:deletedUser._id});
+})
+
 UserSchema.statics.findForLogin= async function(userName,password){
     const user= await this.findOne({userName});
+
+    if(!user)
+    {
+        throw new Error("Username or Password not valid...");
+
+    }
+
+    
    
     const isMachedPassword = await bcrypt.compare(password,user.password);
 
-    if(!isMachedPassword)
+    if(!isMachedPassword) 
     {
-         throw new Error("Username and Password not valid...");
+         throw new Error("Username or Password not valid...");
     }
      return user;
 }
@@ -109,6 +124,12 @@ UserSchema.methods.toJSON=function(){
     return objectData;
 }
 
+
+UserSchema.virtual("tasks",{
+ref:"Task",
+localField:"_id",
+foreignField:"user"
+});
 const User = mongoose.model("Users",UserSchema);
 
 module.exports = User;

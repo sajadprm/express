@@ -9,6 +9,7 @@ router.get('/',ac.checkAdminMidellware, async (req, res) => {
 
     try{
         const users= await User.find();
+       
          res.json(users);
 
     }catch(err){
@@ -18,7 +19,7 @@ router.get('/',ac.checkAdminMidellware, async (req, res) => {
     }
 });
 
-router.get("/:id", async (req, res) =>  {
+router.get("/:id",ac.checkAdminMidellware,async (req, res) =>  {
     try{
         const user= await User.findById(req.params.id);
          
@@ -38,7 +39,7 @@ router.get("/:id", async (req, res) =>  {
     
 })
 
-router.put("/:id", async (req, res) => {
+router.put("/:id",ac.checkAdminForDeleteUserOrUpdateUser, async (req, res) => {
 
     try{
 
@@ -49,14 +50,14 @@ router.put("/:id", async (req, res) => {
           {
               return res.sendStatus(400);
           }
-        const user= await User.findOneAndUpdate(req.params.id,req.body,{new:true})
+        const user= await User.findOneAndUpdate({_id:res.locals.userId},req.body,{new:true})
         if (!user) {
             return res.sendStatus(404);
         }
        
 
             // res.json(User.showUser(user));
-            res.json(user.showUser());
+            res.json(user);
         
    
     }catch(err){
@@ -67,9 +68,10 @@ router.put("/:id", async (req, res) => {
         
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id",ac.checkAdminForDeleteUserOrUpdateUser, async (req, res) => {
     try{
-        const deletedUser= await User.findByIdAndDelete(req.params.id)
+        
+        const deletedUser= await User.findByIdAndDelete(res.locals.userId);
         if (!deletedUser) {
             return res.sendStatus(404);
         }
@@ -82,6 +84,7 @@ router.delete("/:id", async (req, res) => {
     }
    
 });
+
 
 
 
