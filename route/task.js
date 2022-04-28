@@ -5,6 +5,9 @@ const Task = require("../model/task.model");
 const ac=require("../tools/ac");
 router.get('/', async (req, res) => {
     try {
+        const skip=req.query?.skip ? Number(req.query.skip) : 0;
+        const limit=req.query?.limit && req.query.limit <=5 ? Number(req.query.limit) : 5;
+      
         
         const match = {};
         if (req.query ?.complete) {
@@ -15,7 +18,11 @@ router.get('/', async (req, res) => {
         // const task = await Task.find(query)
         const userTask= await req.user.populate({
             path:"tasks",
-            match
+            match,
+            options:{
+                skip,
+                limit,
+            }
         }
             
         )
@@ -29,12 +36,15 @@ router.get('/', async (req, res) => {
 });
 
 
-router.get("/user/all",ac.checkAdminMidellware,async (req,res)=>{
+router.get("/all",ac.checkAdminMidellware,async (req,res)=>{
     try {
+
+        const skip=req.query?.skip ? Number(req.query.skip) : 0;
+        const limit=req.query?.limit && req.query.limit <=5 ? Number(req.query.limit) : 5;
         
         const match = {};
         if (req.query ?.complete) {
-           match.isCompleted=req.query.complete
+           match.isCompleted=req.quer+y.complete
         } 
         if(req.query?.userId)
         {
@@ -42,7 +52,7 @@ router.get("/user/all",ac.checkAdminMidellware,async (req,res)=>{
         }
 
 
-        const tasks= await Task.find(match);
+        const tasks= await Task.find(match).skip(skip).limit(limit);
         console.log(tasks);
 
             

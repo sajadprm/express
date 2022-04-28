@@ -8,7 +8,10 @@ router.get('/',ac.checkAdminMidellware, async (req, res) => {
    
 
     try{
-        const users= await User.find();
+        const skip=req.query?.skip ? Number(req.query.skip) : 0;
+        const limit=req.query?.limit && req.query.limit <=10 ? Number(req.query.limit) : 10;
+        
+        const users= await User.find().skip(skip).limit(limit);
        
          res.json(users);
 
