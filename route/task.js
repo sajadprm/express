@@ -2,27 +2,60 @@ const express = require('express');
 const async = require('hbs/lib/async');
 const router = express.Router();
 const Task = require("../model/task.model");
+const ac=require("../tools/ac");
 router.get('/', async (req, res) => {
     try {
-        const query = {
-            user: req.user._id
-        };
-        if (req.query.complete === "true") {
-            query.isCompleted = true
-        } else if (req.query.complete === "false") {
-            query.isCompleted = false;
+        
+        const match = {};
+        if (req.query ?.complete) {
+           match.isCompleted=req.query.complete
+        } 
+
+
+        // const task = await Task.find(query)
+        const userTask= await req.user.populate({
+            path:"tasks",
+            match
         }
+            
+        )
 
-
-        const task = await Task.find(query)
-
-        res.json(task);
+        res.json(userTask.tasks);
 
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
     }
 });
+
+
+router.get("/user/all",ac.checkAdminMidellware,async (req,res)=>{
+    try {
+        
+        const match = {};
+        if (req.query ?.complete) {
+           match.isCompleted=req.query.complete
+        } 
+        if(req.query?.userId)
+        {
+            match.user=req.query.userId;
+        }
+
+
+        const tasks= await Task.find(match);
+        console.log(tasks);
+
+            
+        
+
+        res.json(tasks);
+
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+})
+
 
 router.get("/:id", async (req, res) => {
     try {
@@ -103,9 +136,6 @@ router.post('/', async (req, res) => {
         return res.sendStatus(500);
     }
 });
-
-
-
 
 
 module.exports = router;

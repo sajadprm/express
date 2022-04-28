@@ -18,6 +18,7 @@ const isLogin = async (req, res, next) => {
         if (!session) {
             return res.sendStatus(401);
         }
+       
         req.user = session.user;
         return next();
 
