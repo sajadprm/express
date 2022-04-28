@@ -3,11 +3,12 @@ const async = require('hbs/lib/async');
 const router = express.Router();
 const Task = require("../model/task.model");
 const ac=require("../tools/ac");
+const sortTools=require("../tools/query")
 router.get('/', async (req, res) => {
     try {
         const skip=req.query?.skip ? Number(req.query.skip) : 0;
         const limit=req.query?.limit && req.query.limit <=5 ? Number(req.query.limit) : 5;
-      
+        const sort=req.query?.sort ? sortTools.createSort(req.query.sort) : {};
         
         const match = {};
         if (req.query ?.complete) {
@@ -22,6 +23,7 @@ router.get('/', async (req, res) => {
             options:{
                 skip,
                 limit,
+                sort
             }
         }
             
@@ -41,10 +43,10 @@ router.get("/all",ac.checkAdminMidellware,async (req,res)=>{
 
         const skip=req.query?.skip ? Number(req.query.skip) : 0;
         const limit=req.query?.limit && req.query.limit <=5 ? Number(req.query.limit) : 5;
-        
+        const sort=req.query?.sort ? sortTools.createSort(req.query.sort) : {};
         const match = {};
         if (req.query ?.complete) {
-           match.isCompleted=req.quer+y.complete
+           match.isCompleted=req.query.complete
         } 
         if(req.query?.userId)
         {
@@ -52,8 +54,7 @@ router.get("/all",ac.checkAdminMidellware,async (req,res)=>{
         }
 
 
-        const tasks= await Task.find(match).skip(skip).limit(limit);
-        console.log(tasks);
+        const tasks= await Task.find(match).skip(skip).limit(limit).sort(sort);
 
             
         

@@ -3,6 +3,7 @@ const async = require('hbs/lib/async');
 const router = express.Router();
 const User = require("../model/user.model");
 const ac = require("../tools/ac");
+const sortTools=require("../tools/query")
 
 router.get('/',ac.checkAdminMidellware, async (req, res) => {
    
@@ -10,8 +11,9 @@ router.get('/',ac.checkAdminMidellware, async (req, res) => {
     try{
         const skip=req.query?.skip ? Number(req.query.skip) : 0;
         const limit=req.query?.limit && req.query.limit <=10 ? Number(req.query.limit) : 10;
+        const sort=req.query?.sort ? sortTools.createSort(req.query.sort) : {};
         
-        const users= await User.find().skip(skip).limit(limit);
+        const users= await User.find().skip(skip).limit(limit).sort(sort);
        
          res.json(users);
 
