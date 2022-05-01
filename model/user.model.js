@@ -110,7 +110,11 @@ UserSchema.statics.findForLogin= async function(userName,password){
 
     if(!isMachedPassword) 
     {
-         throw new Error("Username or Password not valid...");
+         throw{
+             status : 404,
+             message:"Username or Password not valid...",
+         }
+          
     }
      return user;
 }
