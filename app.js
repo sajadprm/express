@@ -4,15 +4,16 @@ const app = express();
 const hbs = require("hbs");
 const morgan = require("morgan");
 const cookieParser=require("cookie-parser");
-const isLogin=require("./tools/auth");
+const {isLoginBySession}=require("./tools/auth");
+const confApp=require("./config/app");
 // Router 
 const weatherRouter = require("./route/weather");
 const userRouter = require("./route/user");
 const taskRouter = require("./route/task");
 const indexRouter = require("./route/index");
 //***************************/
-const port = process.env.PORT || 3000;
-require("./db");
+const port = process.env.PORT || confApp.PORT;
+require("./config/db");
 
 const directoryPublicPath = path.join(__dirname, "/public");
 const directoryViewsPath = path.join(__dirname, "/templates");
@@ -29,11 +30,21 @@ app.use(cookieParser());
 
 
 app.use('/weather', weatherRouter);
-app.use('/users',isLogin,userRouter);
-app.use('/tasks',isLogin,taskRouter);
+app.use('/users',isLoginBySession,userRouter);
+app.use('/tasks',isLoginBySession,taskRouter);
 app.use('/', indexRouter);
 
 
+
+
+app.use((err,req,res,next)=>{
+   res.status(err.status ? err.status : 500).json({
+       status:err.status ? err.status : 500,
+       message:err.message ? err.message : " Something Wrong Please try again Later...",
+       
+   });
+   console.log(err);
+})
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
