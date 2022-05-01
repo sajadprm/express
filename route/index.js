@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const authRouter=require("../route/auth");
+const jwt=require("jsonwebtoken");
+const {isLoginByJwtToken}=require("../tools/auth")
 router.get("/", (req, res) => {
     res.render("base", {
         title: "Home",
@@ -27,8 +29,38 @@ router.get("/contact", (req, res) => {
     }])
 
 
-})
+});
 router.use('/auth',authRouter)
+
+router.get("/test",(req,res)=>{
+
+   
+        const token = jwt.sign({name:"sajjad",family:"khosravi"},"BootCamp..");
+        res.json({token});    
+      
+    
+})
+
+router.get("/test/auth",isLoginByJwtToken,(req,res)=>{
+    res.json(req.user);
+})
+
+router.get("/test/:token",(req,res)=>{
+
+  const decode=jwt.decode(req.params.token);
+    return res.json({decode});
+
+})
+
+router.get("/test/verify/:token",(req,res)=>{
+
+    const verify=jwt.verify(req.params.token,"BootCamp..");
+      return res.json({verify});
+  
+  })
+  
+
+
 router.get('*', (req, res) => {
     res.statusCode = 404;
     res.render("404", {
