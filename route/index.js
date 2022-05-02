@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const authRouter=require("../route/auth");
 const jwt=require("jsonwebtoken");
-const {isLoginByJwtToken}=require("../tools/auth")
+const {isLoginByJwtToken}=require("../tools/auth");
+const upload=require("../tools/upload").upload;
 router.get("/", (req, res) => {
     res.render("base", {
         title: "Home",
@@ -30,7 +31,10 @@ router.get("/contact", (req, res) => {
 
 
 });
-router.use('/auth',authRouter)
+router.use('/auth',authRouter);
+router.post("/upload",upload.single("myFile"),async (req,res)=>{
+res.sendStatus(200);
+})
 
 router.get("/test",(req,res)=>{
 
